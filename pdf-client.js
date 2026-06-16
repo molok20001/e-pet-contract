@@ -44,7 +44,9 @@ let cachedFontBytes = null;
 async function generatePDF(formData, signatureDataUrl, clauses, shop) {
   // ── 步驟一：載入 pdf-lib 和 fontkit ──
   // 從全域變數取得（由 index.html 引入的 CDN script 提供）
-  const { PDFDocument, rgb, StandardFonts } = PDFLib;
+  // 注意：rgb 函式必須在這裡取出，但下面的 drawText 是另一個函式，
+  // 取不到這裡的 rgb，所以改為在 createDrawContext 內部直接用 PDFLib.rgb
+  const { PDFDocument } = PDFLib;
 
   // ── 步驟二：載入中文字型 ──
   const fontBytes = await loadFont();
@@ -124,7 +126,8 @@ function createDrawContext(page, font, config) {
         y: currentY,
         size,
         font,
-        color: rgb(color.r, color.g, color.b),
+        // 直接用 PDFLib.rgb，因為這個函式作用域裡沒有單獨的 rgb
+        color: PDFLib.rgb(color.r, color.g, color.b),
         maxWidth: options.maxWidth || contentWidth,
       });
     },
@@ -135,7 +138,7 @@ function createDrawContext(page, font, config) {
         start: { x: config.marginLeft, y: currentY },
         end: { x: config.pageWidth - config.marginRight, y: currentY },
         thickness: 0.5,
-        color: rgb(0.8, 0.78, 0.75),
+        color: PDFLib.rgb(0.8, 0.78, 0.75),
       });
     }
   };
