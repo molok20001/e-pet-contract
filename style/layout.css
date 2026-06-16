@@ -1,0 +1,80 @@
+/* ══════════════════════════════════════════
+   layout.css — 版面結構
+   包含：頁首、main 容器、section 間距
+   修改這裡會影響整體頁面排版
+══════════════════════════════════════════ */
+
+/* ── 頁首 ── */
+#site-header {
+  background-color: var(--color-primary);
+  color: white;
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+}
+
+#site-header #shop-name {
+  font-size: var(--font-size-sm);
+  opacity: 0.8;
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 1px;
+}
+
+#site-header h1 {
+  font-size: var(--font-size-xl);
+  color: white;
+}
+
+/* ── 主內容容器 ── */
+main {
+  /* 最大寬度限制，置中，平板上不會過寬 */
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* ── 每個 section 的間距 ── */
+main > section {
+  margin-top: var(--spacing-xl);
+}
+
+/* ── 審閱提示區 ── */
+#review-notice {
+  background-color: #fff8e7;
+  border-left: 4px solid #f0a500;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+/* ── 錯誤訊息區 ── */
+.error-message {
+  background-color: #fdecea;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.7;
+}
+
+/* ── 完成畫面 ── */
+#success-section {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+#success-section h2 {
+  border: none;
+  color: var(--color-success);
+  font-size: var(--font-size-xl);
+}
+
+#success-section p {
+  color: var(--color-muted);
+  margin: var(--spacing-md) 0 var(--spacing-lg);
+}

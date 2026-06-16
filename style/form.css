@@ -1,0 +1,95 @@
+/* ══════════════════════════════════════════
+   form.css — 表單欄位樣式
+   包含：欄位群組、label、input、同意勾選
+   修改這裡只影響表單區域的外觀
+══════════════════════════════════════════ */
+
+/* ── 欄位群組（label + input 的容器）── */
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ── 欄位標籤 ── */
+.form-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.3px;
+}
+
+/* ── 輸入框（通用）── */
+.form-group input[type="text"],
+.form-group input[type="tel"] {
+  width: 100%;
+  padding: 14px var(--spacing-md);
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background-color: white;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  /* 平滑過渡效果 */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ── 輸入框：focus 狀態（點擊時）── */
+.form-group input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(195, 90, 46, 0.15);
+}
+
+/* ── 輸入框：readonly 狀態（簽約日期）── */
+.form-group input[readonly] {
+  background-color: var(--color-surface);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* ── 輸入框：驗證失敗狀態 ── */
+/* form-validator.js 會在驗證失敗時加上 .error class */
+.form-group input.error {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+}
+
+/* ── 欄位錯誤提示文字 ── */
+/* form-validator.js 動態插入到每個欄位下方 */
+.field-error {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  margin-top: var(--spacing-xs);
+}
+
+/* ── 同意勾選區 ── */
+#agreement-section {
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+}
+
+.agreement-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+/* ── 同意勾選框 ── */
+#agreement-checkbox {
+  /* 讓 checkbox 大一點，手指容易點 */
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}

@@ -1,0 +1,92 @@
+/* ══════════════════════════════════════════
+   clause.css — 條文折疊區塊樣式
+   包含：折疊標題列、展開內容、動畫
+   修改這裡只影響條文區的外觀
+══════════════════════════════════════════ */
+
+/* ── 單一條文區塊 ── */
+.clause-item {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-sm);
+  overflow: hidden;
+  background-color: white;
+}
+
+/* ── 條文標題列（點擊展開/收合）── */
+.clause-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  background-color: white;
+  /* hover 效果 */
+  transition: background-color 0.15s;
+  user-select: none;
+}
+
+.clause-header:hover {
+  background-color: var(--color-surface);
+}
+
+/* ── 條文標題文字 ── */
+.clause-title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ── 展開/收合箭頭符號 ── */
+.clause-arrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  /* 旋轉動畫 */
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  margin-left: var(--spacing-sm);
+}
+
+/* ── 展開狀態：箭頭旋轉 ── */
+/* clause-renderer.js 展開時會加上 .open class */
+.clause-item.open .clause-arrow {
+  transform: rotate(180deg);
+}
+
+/* ── 條文內容區（預設隱藏）── */
+.clause-body {
+  /* 高度動畫：從 0 到 auto */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease-out;
+}
+
+/* ── 展開狀態：顯示內容 ── */
+.clause-item.open .clause-body {
+  /* 足夠大的值讓內容完整顯示 */
+  max-height: 600px;
+  transition: max-height 0.3s ease-in;
+}
+
+/* ── 條文內容文字 ── */
+.clause-content {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: 1.9;
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+  white-space: pre-wrap;
+}
+
+/* ── 固定條文（type: fixed）── */
+/* 視覺上沒有差異，保留擴充空間 */
+.clause-item.type-fixed .clause-header {
+  cursor: pointer;
+}
+
+/* ── 可選條文（type: selectable）── */
+/* 標題加上輕微的強調底色 */
+.clause-item.type-selectable .clause-header {
+  background-color: #fef9f3;
+}
