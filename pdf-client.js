@@ -57,7 +57,8 @@ async function generatePDF(formData, signatureDataUrl, clauses, shop) {
   // 建立 PDF 文件
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
-  const font = await pdfDoc.embedFont(fontBytes, { subset: true });
+// 關閉子集化，完整嵌入思源黑體，確保所有動態文字、條文、罕見字都能完美顯示
+const font = await pdfDoc.embedFont(fontBytes, { subset: false });
 
   // 建立分頁管理器（pdf-utils.js）
   const pm = new PageManager(pdfDoc, font, PDF_CONFIG);
