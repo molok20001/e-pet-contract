@@ -22,14 +22,16 @@ let currentClauses = [];
    頁面載入後初始化
 ════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  // 步驟一：啟動身份驗證流程（settings-auth.js）
-  // 目前預留模式，會直接觸發 auth:success 事件
-  initAuth();
-
-  // 步驟二：監聽驗證成功事件，載入設定資料
+  // 步驟一：先註冊監聽器（必須在 initAuth 之前，否則事件會錯過）
+  // 因為 initAuth 在預留模式下會「同步」立刻派發 auth:success 事件，
+  // 如果監聽器還沒註冊就派發，事件會被錯過，導致頁面卡在載入中
   document.addEventListener('auth:success', () => {
     loadSettings();
   });
+
+  // 步驟二：啟動身份驗證流程（settings-auth.js）
+  // 預留模式會立刻派發 auth:success，此時監聽器已就緒
+  initAuth();
 });
 
 /**
