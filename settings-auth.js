@@ -50,6 +50,8 @@ function onAuthSuccess() {
   const authSection = document.getElementById('auth-section');
   if (authSection) authSection.hidden = true;
 
-  // 觸發自訂事件，通知 settings-app.js 驗證已通過
-  document.dispatchEvent(new CustomEvent('auth:success'));
+  // ── 未來實作真實驗證時 ──
+  // 在這裡呼叫 loadSettings()，例如：
+  // loadSettings();
+  // 目前由 settings-app.js 的 DOMContentLoaded 直接呼叫，不需要在這裡觸發
 }
