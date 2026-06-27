@@ -5,7 +5,7 @@
    依賴：
    - pdf-utils.js（PageManager、wrapText 等工具）
    - pdf-lib + fontkit（CDN）
-   - fonts/SourceHanSansTW-Regular.otf
+   - fonts/NotoSansTC-Regular.ttf
    ──────────────────────────────────────────
    樣式特徵：
    - 白底黑字，素雅正式
@@ -57,8 +57,8 @@ async function generatePDF(formData, signatureDataUrl, clauses, shop) {
   // 建立 PDF 文件
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
-// 關閉子集化，完整嵌入思源黑體，確保所有動態文字、條文、罕見字都能完美顯示
-const font = await pdfDoc.embedFont(fontBytes, { subset: false });
+  // subset: false = 完整嵌入，TTF 格式必須如此，否則中文字消失
+  const font = await pdfDoc.embedFont(fontBytes, { subset: false });
 
   // 建立分頁管理器（pdf-utils.js）
   const pm = new PageManager(pdfDoc, font, PDF_CONFIG);
@@ -76,7 +76,7 @@ const font = await pdfDoc.embedFont(fontBytes, { subset: false });
  */
 async function loadFont() {
   if (cachedFontBytes) return cachedFontBytes;
-  const response = await fetch('fonts/SourceHanSansTW-Regular.otf');
+  const response = await fetch('fonts/NotoSansTC-Regular.ttf');
   if (!response.ok) throw new Error('字型載入失敗，請重新整理頁面');
   cachedFontBytes = await response.arrayBuffer();
   return cachedFontBytes;
