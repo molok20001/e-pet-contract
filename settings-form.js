@@ -175,6 +175,12 @@ async function saveShopConfig(shopId) {
       showSaveResult('店家資料已儲存', 'success');
       return true;
     } else {
+      // 密碼錯誤（401）→ 清除暫存密碼，引導重新整理頁面登入
+      if (response.status === 401) {
+        clearAuthToken();
+        showSaveResult('密碼已失效，請重新整理頁面後重新登入', 'error');
+        return false;
+      }
       showSaveResult(`儲存失敗：${result.error}`, 'error');
       return false;
     }
@@ -210,6 +216,12 @@ async function saveClauseSelections(shopId, clauses) {
       showSaveResult('條文設定已儲存', 'success');
       return true;
     } else {
+      // 密碼錯誤（401）→ 清除暫存密碼，引導重新整理頁面登入
+      if (response.status === 401) {
+        clearAuthToken();
+        showSaveResult('密碼已失效，請重新整理頁面後重新登入', 'error');
+        return false;
+      }
       showSaveResult(`儲存失敗：${result.error}`, 'error');
       return false;
     }

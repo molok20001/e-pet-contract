@@ -23,13 +23,8 @@ let currentClauses = [];
 ════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   // 執行身份驗證（settings-auth.js）
-  // 目前預留模式，直接通過
-  initAuth();
-
-  // 驗證通過後直接載入設定
-  // 不用事件機制，因為預留模式下 initAuth 是同步的
-  // 未來實作真實驗證時，把 loadSettings() 移到驗證成功的 callback 裡
-  loadSettings();
+  // 顯示密碼牆，驗證通過後才呼叫 loadSettings 載入設定內容
+  initAuth(loadSettings);
 });
 
 /**

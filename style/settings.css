@@ -144,3 +144,70 @@
   color: var(--color-muted);
   font-size: var(--font-size-sm);
 }
+
+/* ══════════════════════════════════════════
+   進頁面密碼牆（auth-section）
+   複用 settings-card 的視覺語言，置中呈現
+══════════════════════════════════════════ */
+.auth-card {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 32px 28px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.auth-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  color: #4a3728;
+}
+
+.auth-hint {
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+  color: #8a7a6a;
+}
+
+.auth-card input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #d8cfc4;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.auth-card input[type="password"]:focus {
+  outline: none;
+  border-color: #a08a70;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  color: #fff;
+  background: #6b5744;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background: #574636;
+}
+
+.auth-card button:disabled {
+  background: #b5a996;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  margin: 12px 0 0;
+  font-size: 0.88rem;
+  color: #c0392b;
+}
