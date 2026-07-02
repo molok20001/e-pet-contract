@@ -25,6 +25,11 @@ let clausesData = [];
 // 讀不到時預設 "6"（最基本、不依賴外部服務，最安全的 fallback）
 let currentMode = '6';
 
+// 設定是否載入成功（控制能否送出）
+// 只有成功取得店家設定與條文才為 true；店號不存在/載入失敗則維持 false
+// 防止在「沒有條文」的狀態下產生無效 PDF
+let configLoaded = false;
+
 /* ════════════════════════════════════════
    頁面載入後初始化
 ════════════════════════════════════════ */
@@ -70,11 +75,15 @@ async function loadConfig() {
       // 渲染條文（clause-renderer.js）
       renderClauses(clausesData);
 
+      // 設定載入成功，允許送出
+      configLoaded = true;
+
     } else {
-      // 找不到店家設定（尚未完成設定）
-      console.warn('[app] 找不到店家設定，使用空白顯示');
+      // 找不到店家設定（店號不存在 / 尚未完成設定）
+      console.warn('[app] 找不到店家設定，停用送出');
       const shopNameEl = document.getElementById('shop-name');
-      if (shopNameEl) shopNameEl.textContent = '（請完成店家設定）';
+      if (shopNameEl) shopNameEl.textContent = '（查無此店家，無法簽約）';
+      disableSubmit('查無此店家設定，無法簽約。請確認連結是否正確或聯絡店家。');
     }
 
   } catch (err) {
@@ -82,6 +91,28 @@ async function loadConfig() {
     console.error('[app] 載入設定失敗：', err);
     const shopNameEl = document.getElementById('shop-name');
     if (shopNameEl) shopNameEl.textContent = '（載入失敗，請重新整理）';
+    disableSubmit('資料載入失敗，請重新整理頁面後再試。');
+  }
+}
+
+/**
+ * 停用送出按鈕並顯示原因
+ * 用於：店號不存在、設定載入失敗等情況，防止產生無效 PDF
+ * @param {string} reason - 顯示給使用者的原因
+ */
+function disableSubmit(reason) {
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = '無法簽約';
+  }
+  // 在送出區顯示原因（若有對應元素）
+  const submitSection = document.getElementById('submit-section');
+  if (submitSection) {
+    const hint = document.createElement('p');
+    hint.className = 'submit-disabled-hint';
+    hint.textContent = reason;
+    submitSection.appendChild(hint);
   }
 }
 
@@ -117,6 +148,14 @@ function bindSubmitButton() {
 async function handleSubmit() {
   const submitBtn = document.getElementById('submit-btn');
   const errorMessage = document.getElementById('error-message');
+
+  // 防護：設定未成功載入（店號不存在/載入失敗）一律不可送出
+  // 這是真正的擋；按鈕 disabled 只是 UI，函式檢查才防得住繞過
+  if (!configLoaded) {
+    errorMessage.textContent = '無法簽約：店家設定未正確載入。';
+    errorMessage.hidden = false;
+    return;
+  }
 
   errorMessage.hidden = true;
 
