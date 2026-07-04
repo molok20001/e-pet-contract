@@ -16,6 +16,10 @@
    pad.isEmpty()     檢查是否空白
    pad.getDataUrl()  取得簽名圖（base64 PNG）
    pad.clear()       清除簽名
+   pad.resize()      重新量測畫布尺寸
+                     （區塊從 hidden 變顯示時必須呼叫一次，
+                     否則 hidden 期間量到的尺寸是 0×0，
+                     簽名區會變成畫不上去的空框）
 ══════════════════════════════════════════ */
 
 /**
@@ -181,5 +185,5 @@ function createSignaturePad({ canvasId, clearBtnId, wrapperId }) {
   // 這是原本單例版本就有的行為，維持不變）
   window.addEventListener('resize', resizeCanvas);
 
-  return { clear, isEmpty, getDataUrl };
+  return { clear, isEmpty, getDataUrl, resize: resizeCanvas };
 }

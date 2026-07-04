@@ -15,7 +15,9 @@
    流程：
    1. bindSubmitButtons() 由 app.js 初始化時呼叫一次
    2. 第一階段（#submit-btn）：
-      驗證表單＋甲方簽名 → 通過則藏起第一階段、顯示乙方簽名區
+      驗證表單＋甲方簽名 → 通過則把甲方階段所有區塊整組隱藏
+      （比照原本 showSuccessScreen 的做法），換乙方簽名區佔滿畫面，
+      視覺上像換了一頁，但其實同一份 HTML、沒有真的換網址
    3. 第二階段（#submit-btn-b）：
       驗證乙方簽名 → 產生 PDF → POST Worker → 顯示完成畫面
 ══════════════════════════════════════════ */
@@ -61,11 +63,22 @@ function handleSubmitStepA() {
     return;
   }
 
-  // 通過：第一階段結束，換手給店員簽乙方
+  // 通過：甲方階段結束，整組隱藏（比照 showSuccessScreen 的既有作法），
+  // 換成乙方簽名區「佔滿畫面」，視覺上像換了一頁
+  document.getElementById('clause-section').hidden = true;
+  document.getElementById('agreement-section').hidden = true;
+  document.getElementById('form-section').hidden = true;
+  document.getElementById('signature-section').hidden = true;
   document.getElementById('submit-section').hidden = true;
+
   const sectionB = document.getElementById('signature-section-b');
   sectionB.hidden = false;
-  sectionB.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // 修正：canvas 在 hidden 期間量到的尺寸是 0×0，
+  // 顯示出來後必須重新量一次，否則簽名區是畫不上去的空框
+  signaturePadB.resize();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /**
