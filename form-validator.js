@@ -18,7 +18,7 @@
  * 目前暫時放寬所有欄位必填驗證，方便快速測試。
  * 下方原本的完整驗證邏輯保留在 validateFormStrict()，
  * 正式版本只要把這裡改成 return validateFormStrict() 即可恢復。
- * 注意：簽名檢查不在這個函式，在 app.js 的 isSignatureEmpty()，不受影響。
+ * 注意：簽名檢查不在這個函式，在 app.js 用簽名板實例的 isEmpty()，不受影響。
  */
 function validateForm() {
   // 測試階段：清除舊錯誤後直接通過

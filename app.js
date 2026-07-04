@@ -30,12 +30,25 @@ let currentMode = '6';
 // 防止在「沒有條文」的狀態下產生無效 PDF
 let configLoaded = false;
 
+// 甲乙雙方簽名板實例（signature.js 工廠模式，DOMContentLoaded 時建立）
+let signaturePadA = null;
+let signaturePadB = null;
+
 /* ════════════════════════════════════════
    頁面載入後初始化
 ════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-  // 初始化簽名板（signature.js）
-  initSignature();
+  // 初始化甲乙雙方簽名板（signature.js 工廠模式）
+  signaturePadA = createSignaturePad({
+    canvasId: 'signature-canvas',
+    clearBtnId: 'clear-signature',
+    wrapperId: 'signature-wrapper',
+  });
+  signaturePadB = createSignaturePad({
+    canvasId: 'signature-canvas-b',
+    clearBtnId: 'clear-signature-b',
+    wrapperId: 'signature-wrapper-b',
+  });
 
   // 填入今天日期
   fillSignDate();
@@ -163,13 +176,21 @@ async function handleSubmit() {
   const isValid = validateForm();
   if (!isValid) return;
 
-  // 步驟二：確認簽名不為空（signature.js）
-  if (isSignatureEmpty()) {
-    const signatureWrapper = document.getElementById('signature-wrapper');
-    if (signatureWrapper) signatureWrapper.classList.add('error');
+  // 步驟二：確認甲乙雙方簽名皆不為空（signature.js）
+  if (signaturePadA.isEmpty()) {
+    const wrapperA = document.getElementById('signature-wrapper');
+    if (wrapperA) wrapperA.classList.add('error');
     document.getElementById('signature-section')
       .scrollIntoView({ behavior: 'smooth', block: 'center' });
-    showGlobalError('請完成簽名後再送出');
+    showGlobalError('請完成甲方簽名後再送出');
+    return;
+  }
+  if (signaturePadB.isEmpty()) {
+    const wrapperB = document.getElementById('signature-wrapper-b');
+    if (wrapperB) wrapperB.classList.add('error');
+    document.getElementById('signature-section-b')
+      .scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showGlobalError('請完成乙方（店家）簽名後再送出');
     return;
   }
 
@@ -179,11 +200,13 @@ async function handleSubmit() {
 
   try {
     const formData = collectFormData();
-    const signatureDataUrl = getSignatureDataUrl();
+    const signatureDataUrl = signaturePadA.getDataUrl();   // 甲方
+    const signatureDataUrlB = signaturePadB.getDataUrl();  // 乙方
 
     const pdfBytes = await generatePDF(
       formData,
       signatureDataUrl,
+      signatureDataUrlB,
       clausesData,
       shopData || { company_name: '', default_vet: '' }
     );
@@ -200,6 +223,7 @@ async function handleSubmit() {
           shop_id: SHOP_ID,
           formData,
           signatureDataUrl,
+          signatureDataUrlB,
           clauses: clausesData,
         }),
       });
@@ -259,6 +283,7 @@ function showSuccessScreen() {
   document.getElementById('agreement-section').hidden = true;
   document.getElementById('form-section').hidden = true;
   document.getElementById('signature-section').hidden = true;
+  document.getElementById('signature-section-b').hidden = true;
   document.getElementById('submit-section').hidden = true;
 
   const successSection = document.getElementById('success-section');

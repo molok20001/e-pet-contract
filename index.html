@@ -124,11 +124,24 @@
     ══════════════════════════════════ -->
     <section id="signature-section">
       <h2>甲方簽名</h2>
-      <p class="signature-hint">請在下方框內以手指或觸控筆簽名</p>
-      <div id="signature-wrapper">
-        <canvas id="signature-canvas"></canvas>
+      <p class="signature-hint">請飼主在下方框內以手指或觸控筆簽名</p>
+      <div id="signature-wrapper" class="signature-wrapper">
+        <canvas id="signature-canvas" class="signature-canvas"></canvas>
       </div>
       <button type="button" id="clear-signature">清除重簽</button>
+    </section>
+
+    <!-- ══════════════════════════════════
+         乙方簽名板（版本6：店內平板雙簽名）
+         同一塊平板，店員接續簽署
+    ══════════════════════════════════ -->
+    <section id="signature-section-b">
+      <h2>乙方簽名</h2>
+      <p class="signature-hint">請店家服務人員在下方框內簽名</p>
+      <div id="signature-wrapper-b" class="signature-wrapper">
+        <canvas id="signature-canvas-b" class="signature-canvas"></canvas>
+      </div>
+      <button type="button" id="clear-signature-b">清除重簽</button>
     </section>
 
     <!-- ══════════════════════════════════

@@ -42,13 +42,14 @@ let cachedFontBytes = null;
 /**
  * 生成契約 PDF（主入口）
  * 由 app.js 的 handleSubmit() 呼叫
- * @param {Object} formData        - 表單資料
- * @param {string} signatureDataUrl - 簽名圖片 base64
- * @param {Array}  clauses         - 條文資料陣列
- * @param {Object} shop            - 店家基本資料
- * @returns {Promise<Uint8Array>}  PDF 二進位資料
+ * @param {Object} formData         - 表單資料
+ * @param {string} signatureDataUrl  - 甲方簽名圖片 base64
+ * @param {string} signatureDataUrlB - 乙方簽名圖片 base64
+ * @param {Array}  clauses          - 條文資料陣列
+ * @param {Object} shop             - 店家基本資料
+ * @returns {Promise<Uint8Array>}   PDF 二進位資料
  */
-async function generatePDF(formData, signatureDataUrl, clauses, shop) {
+async function generatePDF(formData, signatureDataUrl, signatureDataUrlB, clauses, shop) {
   const { PDFDocument } = PDFLib;
 
   // 載入字型
@@ -66,7 +67,7 @@ async function generatePDF(formData, signatureDataUrl, clauses, shop) {
   // 依序繪製各區塊
   drawCoverInfo(pm, formData, shop);
   drawClauses(pm, clauses);
-  await drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl);
+  await drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl, signatureDataUrlB, shop);
 
   return await pdfDoc.save();
 }
@@ -188,22 +189,42 @@ function drawClauses(pm, clauses) {
 }
 
 /**
- * 繪製簽名區
- * 包含：甲方手寫簽名圖片、姓名、日期
+ * 繪製簽名區（版本6：甲乙雙方簽名）
+ * 依序：甲方簽名圖＋姓名 → 乙方簽名圖＋店名 → 日期
  */
-async function drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl) {
+async function drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl, signatureDataUrlB, shop) {
   const cfg = pm.config;
 
   pm.ensureSpace(200);
   pm.drawDivider();
   pm.moveDown(16);
 
+  // ── 甲方 ──
   pm.drawText('甲方簽名', { size: cfg.sizeClauseTitle });
   pm.moveDown(cfg.lineHeightTitle + 8);
+  await drawSignatureImage(pm, pdfDoc, signatureDataUrl);
+  pm.drawField('甲方：', formData.ownerName || '');
+  pm.moveDown(16);
 
-  // 嵌入簽名圖片
+  // ── 乙方 ──
+  pm.ensureSpace(160);
+  pm.drawText('乙方簽名', { size: cfg.sizeClauseTitle });
+  pm.moveDown(cfg.lineHeightTitle + 8);
+  await drawSignatureImage(pm, pdfDoc, signatureDataUrlB);
+  pm.drawField('乙方：', (shop && shop.company_name) || '');
+  pm.moveDown(8);
+
+  pm.drawField('日期：', formData.signDate || '');
+}
+
+/**
+ * 嵌入一張簽名圖片並繪製於目前位置
+ * 高度固定 80，寬度等比縮放；失敗時保留空白高度不中斷
+ */
+async function drawSignatureImage(pm, pdfDoc, dataUrl) {
+  const cfg = pm.config;
   try {
-    const base64Data = signatureDataUrl.split(',')[1];
+    const base64Data = dataUrl.split(',')[1];
     const binaryStr = atob(base64Data);
     const bytes = new Uint8Array(binaryStr.length);
     for (let i = 0; i < binaryStr.length; i++) {
@@ -213,7 +234,6 @@ async function drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl) {
     const signatureImage = await pdfDoc.embedPng(bytes);
     const imgDims = signatureImage.scale(1);
 
-    // 高度固定 80，寬度等比縮放
     const displayHeight = 80;
     const displayWidth = Math.min(
       (imgDims.width / imgDims.height) * displayHeight,
@@ -234,11 +254,6 @@ async function drawSignatureSection(pm, pdfDoc, formData, signatureDataUrl) {
     console.error('[pdf-client] 簽名圖片嵌入失敗：', err);
     pm.moveDown(80);
   }
-
-  // 姓名與日期
-  pm.drawField('甲方：', formData.ownerName || '');
-  pm.moveDown(8);
-  pm.drawField('日期：', formData.signDate || '');
 }
 
 /**
