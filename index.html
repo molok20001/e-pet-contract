@@ -132,26 +132,32 @@
     </section>
 
     <!-- ══════════════════════════════════
-         乙方簽名板（版本6：店內平板雙簽名）
-         同一塊平板，店員接續簽署
+         第一階段送出區
+         點擊後驗證表單＋甲方簽名，通過才顯示乙方簽名區
+         由 submit-flow.js 控制
     ══════════════════════════════════ -->
-    <section id="signature-section-b">
+    <section id="submit-section">
+      <!-- 錯誤訊息由 form-validator.js / submit-flow.js 填入這裡 -->
+      <div id="error-message" class="error-message" hidden></div>
+      <button type="button" id="submit-btn">確認簽署並送出</button>
+    </section>
+
+    <!-- ══════════════════════════════════
+         乙方簽名板（版本6：店內平板雙簽名）
+         甲方送出後才顯示，由店員接續簽署
+         初始隱藏，由 submit-flow.js 於第一階段通過後顯示
+    ══════════════════════════════════ -->
+    <section id="signature-section-b" hidden>
       <h2>乙方簽名</h2>
       <p class="signature-hint">請店家服務人員在下方框內簽名</p>
       <div id="signature-wrapper-b" class="signature-wrapper">
         <canvas id="signature-canvas-b" class="signature-canvas"></canvas>
       </div>
       <button type="button" id="clear-signature-b">清除重簽</button>
-    </section>
 
-    <!-- ══════════════════════════════════
-         送出區
-         點擊後觸發 app.js 的送出流程
-    ══════════════════════════════════ -->
-    <section id="submit-section">
-      <!-- 錯誤訊息由 form-validator.js 填入這裡 -->
-      <div id="error-message" class="error-message" hidden></div>
-      <button type="button" id="submit-btn">確認簽署並送出</button>
+      <!-- 第二階段送出：乙方簽完才真正產生 PDF -->
+      <div id="error-message-b" class="error-message" hidden></div>
+      <button type="button" id="submit-btn-b">確認簽署，產生契約 PDF</button>
     </section>
 
     <!-- ══════════════════════════════════
@@ -174,6 +180,7 @@
   <!-- PDF 工具函式：PageManager、wrapText 等（pdf-client.js 的依賴，必須在前）-->
   <script src="pdf-utils.js"></script>
   <script src="pdf-client.js"></script>
+  <script src="submit-flow.js"></script>
   <script src="app.js"></script>
 
 </body>

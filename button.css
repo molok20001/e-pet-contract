@@ -4,8 +4,9 @@
    修改這裡只影響所有按鈕的外觀
 ══════════════════════════════════════════ */
 
-/* ── 主要按鈕（送出）── */
-#submit-btn {
+/* ── 主要按鈕（送出，甲乙兩階段共用）── */
+#submit-btn,
+#submit-btn-b {
   display: block;
   width: 100%;
   padding: 18px var(--spacing-md);
@@ -22,26 +23,37 @@
   transition: background-color 0.2s, transform 0.1s;
 }
 
-#submit-btn:hover {
+#submit-btn:hover,
+#submit-btn-b:hover {
   background-color: #a84d26;
 }
 
-#submit-btn:active {
+#submit-btn:active,
+#submit-btn-b:active {
   transform: scale(0.98);
 }
 
 /* ── 送出按鈕：處理中狀態 ── */
-/* app.js 送出時加上 .loading class */
-#submit-btn.loading {
+/* submit-flow.js 送出時加上 .loading class */
+#submit-btn.loading,
+#submit-btn-b.loading {
   background-color: var(--color-muted);
   cursor: not-allowed;
   pointer-events: none;
 }
 
 /* ── 送出按鈕：已停用狀態 ── */
-#submit-btn:disabled {
+#submit-btn:disabled,
+#submit-btn-b:disabled {
   background-color: var(--color-muted);
   cursor: not-allowed;
+}
+
+/* ── 乙方送出按鈕：與上方清除重簽按鈕的間距 ── */
+/* submit-btn 在獨立 section，靠 section 間距即可；
+   submit-btn-b 跟 clear-signature-b 同在一個 section，需要額外區隔 */
+#submit-btn-b {
+  margin-top: var(--spacing-lg);
 }
 
 /* ── 清除簽名按鈕（甲、乙方共用）── */
