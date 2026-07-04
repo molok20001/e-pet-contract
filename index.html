@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <!-- 讓頁面在手機和平板上正確縮放，不會自動放大 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>寵物美容服務定型化契約</title>
+
+  <!-- ── 外部套件（從 CDN 載入，不需要自己安裝）── -->
+  <!-- pdf-lib：PDF 生成套件 -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- fontkit：讓 pdf-lib 支援中文字型子集化 -->
+  <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+
+  <!-- ── 樣式表（副程式）── -->
+  <link rel="stylesheet" href="style/base.css" />
+  <link rel="stylesheet" href="style/layout.css" />
+  <link rel="stylesheet" href="style/form.css" />
+  <link rel="stylesheet" href="style/clause.css" />
+  <link rel="stylesheet" href="style/signature.css" />
+  <link rel="stylesheet" href="style/button.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       頁首：店家名稱 + 契約標題
+       內容由 app.js 從設定資料填入
+  ══════════════════════════════════ -->
+  <header id="site-header">
+    <div id="shop-name">載入中...</div>
+    <h1>犬、貓美容服務定型化契約</h1>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════
+         審閱提示區
+         提醒客戶契約需審閱至少一日
+    ══════════════════════════════════ -->
+    <section id="review-notice">
+      <p>請仔細閱讀以下契約條款。依法規定，契約審閱期間不得少於一日，如有疑問請向店家詢問。</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         條文區
+         由 clause-renderer.js 動態生成折疊條文
+         這裡只是容器，內容不寫在這裡
+    ══════════════════════════════════ -->
+    <section id="clause-section">
+      <p class="read-all-notice">【請完整閱讀】請務必展開並完整閱讀以下全部契約條文</p>
+      <div id="clause-container">
+        <!-- clause-renderer.js 會把條文插入這裡 -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         同意勾選
+         必須勾選才能進行下一步
+    ══════════════════════════════════ -->
+    <section id="agreement-section">
+      <label class="agreement-label">
+        <input type="checkbox" id="agreement-checkbox" />
+        我已閱讀並同意上述所有契約條款
+      </label>
+    </section>
+
+    <!-- ══════════════════════════════════
+         甲方資料表單
+         欄位驗證由 form-validator.js 處理
+    ══════════════════════════════════ -->
+    <section id="form-section">
+      <h2>甲方（飼主）資料</h2>
+
+      <div class="form-group">
+        <label for="owner-name">姓名 <span class="required">*</span></label>
+        <input type="text" id="owner-name" placeholder="請輸入真實姓名" />
+      </div>
+
+      <div class="form-group">
+        <label for="owner-id">身分證號／居留證號碼 <span class="required">*</span></label>
+        <input type="text" id="owner-id" placeholder="例：A123456789" />
+      </div>
+
+      <div class="form-group">
+        <label for="owner-address">通訊地址 <span class="required">*</span></label>
+        <input type="text" id="owner-address" placeholder="請輸入通訊地址" />
+      </div>
+
+      <div class="form-group">
+        <label for="owner-phone">聯絡電話 <span class="required">*</span></label>
+        <input type="tel" id="owner-phone" placeholder="例：0912345678" />
+      </div>
+
+      <div class="form-group">
+        <label for="emergency-name">緊急聯絡人姓名 <span class="required">*</span></label>
+        <input type="text" id="emergency-name" placeholder="請輸入緊急聯絡人姓名" />
+      </div>
+
+      <div class="form-group">
+        <label for="emergency-phone">緊急聯絡人電話 <span class="required">*</span></label>
+        <input type="tel" id="emergency-phone" placeholder="例：0987654321" />
+      </div>
+
+      <div class="form-group">
+        <label for="vet-name">指定獸醫診療場所（未填將依店家指定）</label>
+        <input type="text" id="vet-name" placeholder="空白則使用店家預設" />
+      </div>
+
+      <div class="form-group">
+        <label>簽約日期</label>
+        <!-- 2026/07/04 開放手動修改，app.js 只負責帶入預設值 -->
+        <input type="text" id="sign-date" />
+      </div>
+
+      <div class="form-group">
+        <label for="owner-email">Email <span class="optional">（選填）</span></label>
+        <!-- 目前僅記錄，尚無寄信功能（版本5預留）；純文字欄位，跟其他欄位樣式一致 -->
+        <input type="text" id="owner-email" placeholder="例：name@example.com" />
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         寵物資料表單
+         晶片欄位自甲方表單移入（id 不變）
+         其他事項：供 ERP 帶入之合約外資料（webERP 整合預留）
+    ══════════════════════════════════ -->
+    <section id="pet-section">
+      <h2>寵物資料</h2>
+
+      <div class="form-group">
+        <label for="pet-name">寵物姓名</label>
+        <input type="text" id="pet-name" placeholder="請輸入寵物姓名" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-breed">寵物品種</label>
+        <input type="text" id="pet-breed" placeholder="例：柴犬、米克斯" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-sex">寵物性別</label>
+        <select id="pet-sex">
+          <option value="">未填</option>
+          <option value="公">公</option>
+          <option value="母">母</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="pet-birth">寵物生日</label>
+        <input type="date" id="pet-birth" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-weight">體重（公斤）</label>
+        <input type="number" id="pet-weight" min="0" step="0.1" placeholder="例：5.2" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-chip">寵物晶片號碼／辨識資訊 <span class="required">*</span></label>
+        <input type="text" id="pet-chip" placeholder="無晶片可填品種、毛色等辨識資訊" />
+      </div>
+
+      <div class="form-group">
+        <label for="other-notes">其他事項</label>
+        <!-- 合約標準欄位以外、需記錄於契約的資料（未來由 ERP 帶入） -->
+        <textarea id="other-notes" rows="3" placeholder="合約欄位外需記錄之事項"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         簽名板
+         由 signature.js 控制 Canvas 手寫簽名
+    ══════════════════════════════════ -->
+    <section id="signature-section">
+      <h2>甲方簽名</h2>
+      <p class="signature-hint">請飼主在下方框內以手指或觸控筆簽名</p>
+      <div id="signature-wrapper" class="signature-wrapper">
+        <canvas id="signature-canvas" class="signature-canvas"></canvas>
+      </div>
+      <button type="button" id="clear-signature">清除重簽</button>
+    </section>
+
+    <!-- ══════════════════════════════════
+         第一階段送出區
+         點擊後驗證表單＋甲方簽名，通過才顯示乙方簽名區
+         由 submit-flow.js 控制
+    ══════════════════════════════════ -->
+    <section id="submit-section">
+      <!-- 錯誤訊息由 form-validator.js / submit-flow.js 填入這裡 -->
+      <div id="error-message" class="error-message" hidden></div>
+      <button type="button" id="submit-btn">確認簽署並送出</button>
+    </section>
+
+    <!-- ══════════════════════════════════
+         乙方簽名板（版本6：店內平板雙簽名）
+         甲方送出後才顯示，由店員接續簽署
+         初始隱藏，由 submit-flow.js 於第一階段通過後顯示
+    ══════════════════════════════════ -->
+    <section id="signature-section-b" hidden>
+      <h2>乙方簽名</h2>
+      <p class="signature-hint">請店家服務人員在下方框內簽名</p>
+      <div id="signature-wrapper-b" class="signature-wrapper">
+        <canvas id="signature-canvas-b" class="signature-canvas"></canvas>
+      </div>
+      <button type="button" id="clear-signature-b">清除重簽</button>
+
+      <!-- 第二階段送出：乙方簽完才真正產生 PDF -->
+      <div id="error-message-b" class="error-message" hidden></div>
+      <button type="button" id="submit-btn-b">確認簽署，產生契約 PDF</button>
+    </section>
+
+    <!-- ══════════════════════════════════
+         完成畫面
+         送出成功後顯示，初始狀態隱藏
+    ══════════════════════════════════ -->
+    <section id="success-section" hidden>
+      <h2>簽署完成</h2>
+      <p>感謝您完成簽署，請點擊下方按鈕下載契約副本。</p>
+      <button type="button" id="download-pdf-btn">下載 PDF 契約副本</button>
+    </section>
+
+  </main>
+
+  <!-- ── JavaScript 副程式（順序重要，不可任意調換）── -->
+  <script src="shop-id.js"></script>
+  <script src="clause-renderer.js"></script>
+  <script src="form-validator.js"></script>
+  <script src="signature.js"></script>
+  <!-- PDF 工具函式：PageManager、wrapText 等（pdf-client.js 的依賴，必須在前）-->
+  <script src="pdf-utils.js"></script>
+  <script src="pdf-client.js"></script>
+  <script src="submit-flow.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

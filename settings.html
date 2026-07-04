@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>店家設定 — 寵物美容簽約系統</title>
+
+  <!-- 樣式表（沿用主頁面的基礎樣式）-->
+  <link rel="stylesheet" href="style/base.css" />
+  <link rel="stylesheet" href="style/layout.css" />
+  <link rel="stylesheet" href="style/form.css" />
+  <link rel="stylesheet" href="style/button.css" />
+  <!-- 設定頁專用樣式 -->
+  <link rel="stylesheet" href="style/settings.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       頁首
+  ══════════════════════════════════ -->
+  <header id="site-header">
+    <div id="shop-name">系統管理</div>
+    <h1>店家設定</h1>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════
+         身份驗證區塊
+         目前預留，直接顯示設定表單
+         未來加入密碼保護時，這裡會先顯示登入畫面
+         由 settings-auth.js 控制顯示/隱藏
+    ══════════════════════════════════ -->
+    <section id="auth-section" hidden>
+      <!-- settings-auth.js 會在這裡插入登入表單（未來實作）-->
+    </section>
+
+    <!-- ══════════════════════════════════
+         載入中提示
+    ══════════════════════════════════ -->
+    <section id="loading-section">
+      <p class="loading-text">載入中...</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         設定內容區（驗證通過後顯示）
+    ══════════════════════════════════ -->
+    <section id="settings-section" hidden>
+
+      <!-- 店家基本資料 -->
+      <div class="settings-card">
+        <h2>店家基本資料</h2>
+        <p class="card-hint">這些資料會顯示在契約的乙方欄位。</p>
+
+        <div class="form-group">
+          <label for="company-name">公司或商號名稱 <span class="required">*</span></label>
+          <input type="text" id="company-name" placeholder="例：毛毛寵物美容" />
+        </div>
+
+        <div class="form-group">
+          <label for="owner-name">代表人或負責人姓名 <span class="required">*</span></label>
+          <input type="text" id="owner-name" placeholder="例：陳小明" />
+        </div>
+
+        <div class="form-group">
+          <label for="address">營業地址 <span class="required">*</span></label>
+          <input type="text" id="address" placeholder="例：台中市西區民權路100號" />
+        </div>
+
+        <div class="form-group">
+          <label for="business-hours">營業時間 <span class="required">*</span></label>
+          <input type="text" id="business-hours" placeholder="例：週一至週六 09:00-18:00" />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">聯絡電話 <span class="required">*</span></label>
+          <input type="tel" id="phone" placeholder="例：04-12345678" />
+        </div>
+
+        <div class="form-group">
+          <label for="default-vet">預設緊急獸醫診療場所 <span class="required">*</span></label>
+          <input type="text" id="default-vet" placeholder="例：台中市動物醫院 04-87654321" />
+        </div>
+
+        <div class="form-group">
+          <label for="court">管轄法院（第二十條）<span class="required">*</span></label>
+          <input type="text" id="court" placeholder="例：臺灣臺中" />
+          <small class="field-hint">填入地方法院所在地，例如「臺灣臺中」，系統會自動加上「地方法院」。</small>
+        </div>
+
+        <button type="button" id="save-shop-btn">儲存店家資料</button>
+      </div>
+
+      <!-- 可選條文設定 -->
+      <div class="settings-card">
+        <h2>條文選項設定</h2>
+        <p class="card-hint">以下條文提供多個選項，請選擇適合您店家的版本。</p>
+
+        <!-- 條文選項由 settings-app.js 動態生成 -->
+        <div id="clause-options-container">
+          <!-- settings-app.js 會把 selectable 條文的選項插入這裡 -->
+        </div>
+
+        <button type="button" id="save-clauses-btn">儲存條文設定</button>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         儲存結果提示
+    ══════════════════════════════════ -->
+    <div id="save-result" class="save-result" hidden></div>
+
+  </main>
+
+  <!-- JavaScript 副程式（順序重要）-->
+  <script src="shop-id.js"></script>
+  <script src="settings-auth.js"></script>
+  <script src="settings-form.js"></script>
+  <script src="settings-app.js"></script>
+
+</body>
+</html>

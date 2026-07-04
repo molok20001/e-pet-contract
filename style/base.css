@@ -1,0 +1,110 @@
+/* ══════════════════════════════════════════
+   base.css — 基礎設定
+   包含：字型載入、CSS 變數、全域 reset
+   修改這裡會影響整個網站的基礎外觀
+══════════════════════════════════════════ */
+
+/* ── 中文字型載入 ── */
+@font-face {
+  font-family: 'SansTW';
+  /* 字型檔案放在 fonts/ 資料夾 */
+  src: url('../fonts/SourceHanSansTW-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  /* 字型載入前先用系統字型，載入後自動切換 */
+  font-display: swap;
+}
+
+/* ── CSS 變數（顏色、間距、圓角）── */
+:root {
+  /* 主色調：深棕，帶溫暖感 */
+  --color-primary: #4a3728;
+  /* 強調色：咖啡橘，用於按鈕、重點 */
+  --color-accent: #c35a2e;
+  /* 背景色：米白，護眼 */
+  --color-bg: #faf7f3;
+  /* 區塊背景：略深的米白 */
+  --color-surface: #f3ede4;
+  /* 邊框色 */
+  --color-border: #d9cfc4;
+  /* 主要文字色 */
+  --color-text: #2f201b;
+  /* 次要文字色（提示、說明）*/
+  --color-muted: #7a6a5f;
+  /* 錯誤色 */
+  --color-error: #c0392b;
+  /* 成功色 */
+  --color-success: #27ae60;
+
+  /* 間距單位 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+
+  /* 圓角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
+  /* 字型 */
+  --font-main: 'SansTW', 'Microsoft JhengHei', sans-serif;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+}
+
+/* ── 全域 Reset ── */
+/* 清除瀏覽器預設的 margin/padding，讓各瀏覽器顯示一致 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 全域基礎樣式 ── */
+html {
+  font-size: var(--font-size-md);
+  /* 平滑滾動 */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.7;
+  /* 防止內容貼邊 */
+  padding-bottom: var(--spacing-xl);
+}
+
+/* ── 標題樣式 ── */
+h1 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* ── 必填星號樣式 ── */
+.required {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+/* ── 選填說明樣式 ── */
+.optional {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+}
