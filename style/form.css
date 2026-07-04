@@ -20,8 +20,13 @@
 }
 
 /* ── 輸入框（通用）── */
+/* 2026/07/04 擴充：date、number 原本沒被涵蓋，只吃到瀏覽器預設樣式，
+   跟 text/tel 長得不一樣（見寵物生日、體重欄位）。email 欄位改回純文字
+   輸入（見下方 index.html 異動），故不需再納入 type="email" */
 .form-group input[type="text"],
-.form-group input[type="tel"] {
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="number"] {
   width: 100%;
   padding: 14px var(--spacing-md);
   font-family: var(--font-main);

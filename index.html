@@ -92,12 +92,6 @@
       </div>
 
       <div class="form-group">
-        <label for="owner-email">Email <span class="optional">（選填）</span></label>
-        <!-- 目前僅記錄，尚無寄信功能（版本5預留） -->
-        <input type="email" id="owner-email" placeholder="例：name@example.com" />
-      </div>
-
-      <div class="form-group">
         <label for="emergency-name">緊急聯絡人姓名 <span class="required">*</span></label>
         <input type="text" id="emergency-name" placeholder="請輸入緊急聯絡人姓名" />
       </div>
@@ -108,14 +102,20 @@
       </div>
 
       <div class="form-group">
-        <label for="vet-name">指定獸醫診療場所 <span class="optional">（選填）</span></label>
+        <label for="vet-name">指定獸醫診療場所（未填將依店家指定）</label>
         <input type="text" id="vet-name" placeholder="空白則使用店家預設" />
       </div>
 
       <div class="form-group">
         <label>簽約日期</label>
-        <!-- 日期由 app.js 自動帶入，不可修改 -->
-        <input type="text" id="sign-date" readonly />
+        <!-- 2026/07/04 開放手動修改，app.js 只負責帶入預設值 -->
+        <input type="text" id="sign-date" />
+      </div>
+
+      <div class="form-group">
+        <label for="owner-email">Email <span class="optional">（選填）</span></label>
+        <!-- 目前僅記錄，尚無寄信功能（版本5預留）；純文字欄位，跟其他欄位樣式一致 -->
+        <input type="text" id="owner-email" placeholder="例：name@example.com" />
       </div>
 
     </section>

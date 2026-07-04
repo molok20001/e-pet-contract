@@ -36,8 +36,9 @@ function renderClauses(clauses) {
   `).join('');
 
   // 單一總折疊區塊（沿用既有 clause-item 折疊樣式與行為）
+  // 2026/07/04：預設展開（.open），確保使用者一進頁面就看到完整契約
   const item = document.createElement('div');
-  item.className = 'clause-item';
+  item.className = 'clause-item open';
 
   item.innerHTML = `
     <div class="clause-header">
