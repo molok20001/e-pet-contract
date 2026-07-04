@@ -68,6 +68,7 @@ function handleSubmitStepA() {
   document.getElementById('clause-section').hidden = true;
   document.getElementById('agreement-section').hidden = true;
   document.getElementById('form-section').hidden = true;
+  document.getElementById('pet-section').hidden = true;
   document.getElementById('signature-section').hidden = true;
   document.getElementById('submit-section').hidden = true;
 
@@ -160,10 +161,17 @@ function collectFormData() {
     ownerId:        document.getElementById('owner-id').value.trim(),
     ownerAddress:   document.getElementById('owner-address').value.trim(),
     ownerPhone:     document.getElementById('owner-phone').value.trim(),
+    ownerEmail:     document.getElementById('owner-email').value.trim(), // 目前僅記錄（版本5寄信預留）
     emergencyName:  document.getElementById('emergency-name').value.trim(),
     emergencyPhone: document.getElementById('emergency-phone').value.trim(),
     vetName:        document.getElementById('vet-name').value.trim() || window.defaultVet || '',
+    petName:        document.getElementById('pet-name').value.trim(),
+    petBreed:       document.getElementById('pet-breed').value.trim(),
+    petSex:         document.getElementById('pet-sex').value,
+    petBirth:       document.getElementById('pet-birth').value,
+    petWeight:      document.getElementById('pet-weight').value,
     petChip:        document.getElementById('pet-chip').value.trim(),
+    otherNotes:     document.getElementById('other-notes').value.trim(), // 合約外資料（ERP帶入預留）
     signDate:       document.getElementById('sign-date').value,
   };
 }
@@ -187,6 +195,7 @@ function showSuccessScreen() {
   document.getElementById('clause-section').hidden = true;
   document.getElementById('agreement-section').hidden = true;
   document.getElementById('form-section').hidden = true;
+  document.getElementById('pet-section').hidden = true;
   document.getElementById('signature-section').hidden = true;
   document.getElementById('signature-section-b').hidden = true;
   document.getElementById('submit-section').hidden = true;

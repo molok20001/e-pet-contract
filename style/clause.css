@@ -63,9 +63,22 @@
 
 /* ── 展開狀態：顯示內容 ── */
 .clause-item.open .clause-body {
-  /* 足夠大的值讓內容完整顯示 */
-  max-height: 600px;
-  transition: max-height 0.3s ease-in;
+  /* 2026/07/04 改為單一總折疊後，內容為整份契約（22條全文），
+     固定高度上限會截斷內容，改為不限高。
+     代價：收合動畫消失（展開仍即時），完整閱讀優先於動畫 */
+  max-height: none;
+}
+
+/* ── 總折疊內的單條條文（全文模式）── */
+.clause-full-item {
+  padding: 0 var(--spacing-md);
+}
+
+.clause-full-title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: var(--spacing-md) 0 var(--spacing-sm);
 }
 
 /* ── 條文內容文字 ── */

@@ -78,3 +78,11 @@ main > section {
   color: var(--color-muted);
   margin: var(--spacing-md) 0 var(--spacing-lg);
 }
+
+/* ── 請完整閱讀提醒（條文區頂部，2026/07/04）── */
+.read-all-notice {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-sm);
+}

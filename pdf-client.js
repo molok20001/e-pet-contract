@@ -130,6 +130,7 @@ function drawCoverInfo(pm, formData, shop) {
   pm.moveDown(cfg.lineHeightTitle + 4);
 
   // 甲方欄位（底線格式）
+  // 註：Email 僅記錄於 KV（版本5寄信預留），非官方契約欄位，不印入 PDF
   const fields = [
     ['消費者姓名', formData.ownerName || ''],
     ['身分證統一編號／居留證號碼', formData.ownerId || ''],
@@ -138,11 +139,27 @@ function drawCoverInfo(pm, formData, shop) {
     ['緊急聯絡人', formData.emergencyName || ''],
     ['緊急聯絡人電話', formData.emergencyPhone || ''],
     ['指定獸醫診療場所', formData.vetName || shop.default_vet || ''],
-    ['寵物晶片號碼', formData.petChip || ''],
     ['簽約日期', formData.signDate || ''],
   ];
 
   fields.forEach(([label, value]) => {
+    pm.drawField(label, value);
+  });
+
+  pm.moveDown(12);
+
+  // 寵物欄位（2026/07/04 新增；其他事項供合約外資料如 ERP 帶入）
+  const petFields = [
+    ['寵物姓名', formData.petName || ''],
+    ['寵物品種', formData.petBreed || ''],
+    ['寵物性別', formData.petSex || ''],
+    ['寵物生日', formData.petBirth || ''],
+    ['體重（公斤）', formData.petWeight || ''],
+    ['寵物晶片號碼', formData.petChip || ''],
+    ['其他事項', formData.otherNotes || ''],
+  ];
+
+  petFields.forEach(([label, value]) => {
     pm.drawField(label, value);
   });
 

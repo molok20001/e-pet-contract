@@ -47,6 +47,7 @@
          這裡只是容器，內容不寫在這裡
     ══════════════════════════════════ -->
     <section id="clause-section">
+      <p class="read-all-notice">【請完整閱讀】請務必展開並完整閱讀以下全部契約條文</p>
       <div id="clause-container">
         <!-- clause-renderer.js 會把條文插入這裡 -->
       </div>
@@ -91,6 +92,12 @@
       </div>
 
       <div class="form-group">
+        <label for="owner-email">Email <span class="optional">（選填）</span></label>
+        <!-- 目前僅記錄，尚無寄信功能（版本5預留） -->
+        <input type="email" id="owner-email" placeholder="例：name@example.com" />
+      </div>
+
+      <div class="form-group">
         <label for="emergency-name">緊急聯絡人姓名 <span class="required">*</span></label>
         <input type="text" id="emergency-name" placeholder="請輸入緊急聯絡人姓名" />
       </div>
@@ -106,14 +113,59 @@
       </div>
 
       <div class="form-group">
+        <label>簽約日期</label>
+        <!-- 日期由 app.js 自動帶入，不可修改 -->
+        <input type="text" id="sign-date" readonly />
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         寵物資料表單
+         晶片欄位自甲方表單移入（id 不變）
+         其他事項：供 ERP 帶入之合約外資料（webERP 整合預留）
+    ══════════════════════════════════ -->
+    <section id="pet-section">
+      <h2>寵物資料</h2>
+
+      <div class="form-group">
+        <label for="pet-name">寵物姓名</label>
+        <input type="text" id="pet-name" placeholder="請輸入寵物姓名" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-breed">寵物品種</label>
+        <input type="text" id="pet-breed" placeholder="例：柴犬、米克斯" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-sex">寵物性別</label>
+        <select id="pet-sex">
+          <option value="">未填</option>
+          <option value="公">公</option>
+          <option value="母">母</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="pet-birth">寵物生日</label>
+        <input type="date" id="pet-birth" />
+      </div>
+
+      <div class="form-group">
+        <label for="pet-weight">體重（公斤）</label>
+        <input type="number" id="pet-weight" min="0" step="0.1" placeholder="例：5.2" />
+      </div>
+
+      <div class="form-group">
         <label for="pet-chip">寵物晶片號碼／辨識資訊 <span class="required">*</span></label>
         <input type="text" id="pet-chip" placeholder="無晶片可填品種、毛色等辨識資訊" />
       </div>
 
       <div class="form-group">
-        <label>簽約日期</label>
-        <!-- 日期由 app.js 自動帶入，不可修改 -->
-        <input type="text" id="sign-date" readonly />
+        <label for="other-notes">其他事項</label>
+        <!-- 合約標準欄位以外、需記錄於契約的資料（未來由 ERP 帶入） -->
+        <textarea id="other-notes" rows="3" placeholder="合約欄位外需記錄之事項"></textarea>
       </div>
 
     </section>
