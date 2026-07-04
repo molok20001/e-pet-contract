@@ -150,6 +150,10 @@ function createSignaturePad({ canvasId, clearBtnId, wrapperId }) {
    * @returns {boolean} true = 空白
    */
   function isEmpty() {
+    // 防禦：canvas 尺寸為 0（例如在 hidden 狀態下初始化且 CSS 未正確載入）時，
+    // getImageData 會直接拋 IndexSizeError 打斷整個送出流程。
+    // 0 尺寸畫布必然沒有簽名，直接回報空白，讓使用者看到正常的錯誤提示。
+    if (canvas.width === 0 || canvas.height === 0) return true;
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     // 每 4 個值代表一個像素（R, G, B, A），檢查 alpha
     for (let i = 3; i < pixels.length; i += 4) {

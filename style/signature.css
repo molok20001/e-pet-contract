@@ -12,7 +12,7 @@
 }
 
 /* ── 簽名板外框容器 ── */
-#signature-wrapper {
+.signature-wrapper {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: white;
@@ -22,7 +22,7 @@
 }
 
 /* ── Canvas 簽名板本體 ── */
-#signature-canvas {
+.signature-canvas {
   display: block;
   width: 100%;
   /* 高度固定，提供足夠簽名空間 */
@@ -33,7 +33,7 @@
 
 /* ── 驗證失敗時的外框紅色提示 ── */
 /* form-validator.js 驗證失敗時加上 .error class */
-#signature-wrapper.error {
+.signature-wrapper.error {
   border-color: var(--color-error);
   box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
 }
