@@ -120,9 +120,11 @@ class PageManager {
     // 繪製標籤
     const textColor = hexToRgb('#1a1a1a');
 
-    // 標籤寬度用固定值：每個中文字約 size * 1.0，每個英文/符號約 size * 0.6
-    // 不用 measureText 是因為 subset 模式下，字元在 drawText 之前量測會不準確
-    const labelWidth = label.length * size * 0.75 + 8;
+    // 標籤寬度：用 measureText 實際量測（字型已是 subset:false 完整嵌入，
+    // 量測跟實際畫字用同一份字型資料，量出來的寬度是準的）
+    // 舊寫法用「字數 × 固定比例」估算，中文長標籤會低估寬度，
+    // 導致值文字疊到標籤尾巴上（例如「指定獸醫診療場所」7字的情況）
+    const labelWidth = measureText(label, size, this.font) + 8;
 
     this.currentPage.drawText(label, {
       x,
