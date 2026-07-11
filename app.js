@@ -90,6 +90,9 @@ async function loadConfig() {
       // 渲染條文（clause-renderer.js）
       renderClauses(clausesData);
 
+      // 依店家設定標示必填星號（form-validator.js）
+      markRequiredFields(shopData.required_fields);
+
       // 設定載入成功，允許送出
       configLoaded = true;
 
