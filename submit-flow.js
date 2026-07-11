@@ -109,7 +109,8 @@ async function handleSubmitStepB() {
     const signatureDataUrl = signaturePadA.getDataUrl();   // 甲方
     const signatureDataUrlB = signaturePadB.getDataUrl();  // 乙方
 
-    const pdfBytes = await generatePDF(
+    // 版面二版（pdf-layout-v2.js）；回退舊版改呼叫 generatePDF（pdf-client.js）
+    const pdfBytes = await generatePDFv2(
       formData,
       signatureDataUrl,
       signatureDataUrlB,
@@ -131,6 +132,7 @@ async function handleSubmitStepB() {
           signatureDataUrl,
           signatureDataUrlB,
           clauses: clausesData,
+          token: getSignToken(),  // 一次性票券（shop-id.js；後端驗票銷票）
         }),
       });
       const result = await response.json();

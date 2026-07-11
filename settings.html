@@ -111,6 +111,16 @@
         <button type="button" id="required-fields-btn">設定必填欄位</button>
       </div>
 
+      <!-- 產生一次性簽約網址 -->
+      <div class="settings-card">
+        <h2>產生簽約網址</h2>
+        <p class="card-hint">每位客戶簽約前按一次，產生專屬簽約網址（1 小時內有效，簽署完成即失效）。</p>
+        <button type="button" id="generate-token-btn">產生簽約網址</button>
+        <div id="token-url-result" hidden>
+          <!-- settings-token.js 會把網址與開啟連結插入這裡 -->
+        </div>
+      </div>
+
     </section>
 
     <!-- ══════════════════════════════════
@@ -141,6 +151,7 @@
   <script src="settings-auth.js"></script>
   <script src="settings-form.js"></script>
   <script src="settings-required-fields.js"></script>
+  <script src="settings-token.js"></script>
   <script src="settings-app.js"></script>
 
 </body>

@@ -88,6 +88,26 @@ function validateForm(requiredFields) {
 }
 
 /**
+ * 依店家設定在欄位標籤加上紅色必填星號
+ * 由 app.js 在 loadConfig 成功後呼叫一次
+ * （2026/07/08 起 index.html 不再寫死星號，全部動態標示）
+ * @param {Array<string>|undefined} requiredFields - shopConfig.required_fields
+ */
+function markRequiredFields(requiredFields) {
+  const required = Array.isArray(requiredFields) ? requiredFields : [];
+  required.forEach(id => {
+    const label = document.querySelector(`label[for="${id}"]`);
+    if (!label || label.querySelector('.required')) return;  // 找不到或已標過就略過
+
+    const star = document.createElement('span');
+    star.className = 'required';
+    star.textContent = '*';
+    label.appendChild(document.createTextNode(' '));
+    label.appendChild(star);
+  });
+}
+
+/**
  * 在欄位下方顯示錯誤提示
  * （原名 showError，2026/07/08 更名避免與 submit-flow.js 全域衝突）
  * @param {HTMLElement} inputEl - 有問題的 input 元素
