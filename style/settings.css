@@ -211,3 +211,88 @@
   font-size: 0.88rem;
   color: #c0392b;
 }
+
+/* ══════════════════════════════════════════
+   必填欄位勾選視窗（required-fields-dialog）
+   原生 <dialog>，視覺沿用 settings-card
+══════════════════════════════════════════ */
+#required-fields-dialog {
+  width: min(480px, 90vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+#required-fields-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#required-fields-dialog h2 {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* 分組框（甲方資料／寵物資料） */
+.required-fields-group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.required-fields-group legend {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: 0 var(--spacing-xs);
+}
+
+/* 單一欄位勾選列 */
+.required-field-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 8px 4px;
+  font-size: var(--font-size-md);
+  cursor: pointer;
+}
+
+.required-field-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* 視窗底部按鈕列：取消／儲存並排 */
+.dialog-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.dialog-buttons button {
+  flex: 1;
+  padding: 12px;
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+#required-fields-save {
+  color: white;
+  background-color: var(--color-primary);
+}
+
+#required-fields-save:disabled {
+  background-color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+#required-fields-cancel {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+}

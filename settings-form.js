@@ -36,6 +36,10 @@ function fillShopForm(shopConfig) {
     const el = document.getElementById(id);
     if (el) el.value = value;
   });
+
+  // 必填欄位設定存入 settings-required-fields.js 的模組狀態
+  // （未設定過為 undefined → 該檔內視為全部選填）
+  initRequiredFields(shopConfig.required_fields);
 }
 
 /**
@@ -51,6 +55,9 @@ function collectShopForm() {
     phone:          document.getElementById('phone')?.value.trim()          || '',
     default_vet:    document.getElementById('default-vet')?.value.trim()    || '',
     court:          document.getElementById('court')?.value.trim()          || '',
+    // ⚠️ POST /config 是整包覆蓋（後端只保護 admin_pass 與 mode），
+    // 必填欄位設定必須每次儲存都帶上，否則會被洗掉
+    required_fields: getRequiredFields(),
   };
 }
 

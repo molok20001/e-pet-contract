@@ -104,7 +104,29 @@
         <button type="button" id="save-clauses-btn">儲存條文設定</button>
       </div>
 
+      <!-- 簽約頁必填欄位設定 -->
+      <div class="settings-card">
+        <h2>簽約頁必填欄位</h2>
+        <p class="card-hint">勾選的欄位在簽約頁必須填寫才能送出，未勾選的為選填。未設定時全部欄位皆為選填。</p>
+        <button type="button" id="required-fields-btn">設定必填欄位</button>
+      </div>
+
     </section>
+
+    <!-- ══════════════════════════════════
+         必填欄位勾選視窗
+         清單由 settings-required-fields.js 依 field-registry.js 渲染
+    ══════════════════════════════════ -->
+    <dialog id="required-fields-dialog">
+      <h2>設定必填欄位</h2>
+      <div id="required-fields-list">
+        <!-- settings-required-fields.js 會把分組 checkbox 插入這裡 -->
+      </div>
+      <div class="dialog-buttons">
+        <button type="button" id="required-fields-cancel" class="btn-secondary">取消</button>
+        <button type="button" id="required-fields-save">儲存必填設定</button>
+      </div>
+    </dialog>
 
     <!-- ══════════════════════════════════
          儲存結果提示
@@ -115,8 +137,10 @@
 
   <!-- JavaScript 副程式（順序重要）-->
   <script src="shop-id.js"></script>
+  <script src="field-registry.js"></script>
   <script src="settings-auth.js"></script>
   <script src="settings-form.js"></script>
+  <script src="settings-required-fields.js"></script>
   <script src="settings-app.js"></script>
 
 </body>

@@ -1,164 +1,111 @@
 /* ══════════════════════════════════════════
    form-validator.js — 表單驗證副程式
-   職責：驗證所有表單欄位是否填寫正確
-   輸入：無（直接讀取頁面上的 input 元素）
-   輸出：true（驗證通過）或 false（有錯誤）
+   職責：依店家設定的必填欄位清單驗證表單
+   ──────────────────────────────────────────
+   2026/07/08 重寫：
+   - 舊版必填清單寫死＋兩層 return true 全放行（測試階段設定），
+     整段廢除。必填改由店家設定（KV shop: 的 required_fields）決定
+   - required_fields 未設定（undefined/空陣列）= 全部選填
+     （2026/07/08 使用者拍板）
+   - 同意勾選（agreement-checkbox）為法律必要，永遠必勾，不受設定影響
+   - 格式驗證（身分證、電話）與必填脫鉤：欄位有填才檢查格式，
+     沒填且非必填就放行
+   - showError 更名 showFieldError（原與 submit-flow.js 的
+     showError 全域同名衝突，後載入者會蓋掉前者）
+   ──────────────────────────────────────────
+   依賴（同頁 <script> 全域共用）：
+   - CONTRACT_FIELDS（field-registry.js）：欄位 id → 標籤對照
    ──────────────────────────────────────────
    驗證失敗時：
-   1. 在欄位下方顯示錯誤提示文字
+   1. 在欄位下方顯示錯誤提示文字（欄位旁提示，2026/07/08 拍板）
    2. 在欄位加上 .error class（CSS 顯示紅框）
    3. 捲動到第一個錯誤欄位
 ══════════════════════════════════════════ */
 
+// 格式驗證規則：欄位 id → 檢查函式與錯誤訊息
+// 只在「欄位有填值」時套用（必填與否交給 required_fields）
+const FORMAT_RULES = {
+  'owner-id':        { check: isValidId,    message: '身分證號格式不正確（例：A123456789）' },
+  'owner-phone':     { check: isValidPhone, message: '電話格式不正確（例：0912345678 或 04-12345678）' },
+  'emergency-phone': { check: isValidPhone, message: '電話格式不正確（例：0987654321）' },
+};
+
 /**
- * 執行所有欄位驗證
+ * 執行表單驗證
+ * @param {Array<string>|undefined} requiredFields - 店家設定的必填欄位 id 清單
+ *        （來自 shopConfig.required_fields；未設定視為全部選填）
  * @returns {boolean} true = 全部通過，false = 有錯誤
  *
- * ⚠️ 測試階段設定（2026/06/16）：
- * 目前暫時放寬所有欄位必填驗證，方便快速測試。
- * 下方原本的完整驗證邏輯保留在 validateFormStrict()，
- * 正式版本只要把這裡改成 return validateFormStrict() 即可恢復。
- * 注意：簽名檢查不在這個函式，在 app.js 用簽名板實例的 isEmpty()，不受影響。
+ * 注意：簽名檢查不在這個函式，在 submit-flow.js 用簽名板實例的 isEmpty()
  */
-function validateForm() {
-  // 測試階段：清除舊錯誤後直接通過
-  clearAllErrors();
-  return true;
-}
-
-/**
- * 完整驗證邏輯（正式版本使用）
- * 測試階段暫時不呼叫，保留供日後恢復
- * @returns {boolean} true = 全部通過，false = 有錯誤
- */
-function validateFormStrict() {
-  // ════════════════════════════════════════
-  // ⚠️ 測試模式：暫時跳過所有必填驗證
-  // 測試完畢後，刪除下面這一行 return true; 即可恢復正常驗證
-  // ════════════════════════════════════════
-  return true;
-
-  // 先清除所有上次的錯誤提示
+function validateForm(requiredFields) {
   clearAllErrors();
 
-  // 記錄是否有錯誤
-  let hasError = false;
-  // 記錄第一個錯誤的元素（用於捲動定位）
+  const required = Array.isArray(requiredFields) ? requiredFields : [];
   let firstErrorEl = null;
 
-  // ── 逐一驗證每個欄位 ──
-
-  // 姓名：必填，2-20 字
-  const ownerName = document.getElementById('owner-name');
-  if (!ownerName.value.trim()) {
-    showError(ownerName, '請輸入姓名');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerName;
-  } else if (ownerName.value.trim().length < 2) {
-    showError(ownerName, '姓名至少需要 2 個字');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerName;
-  }
-
-  // 身分證號：必填，格式驗證
-  const ownerId = document.getElementById('owner-id');
-  if (!ownerId.value.trim()) {
-    showError(ownerId, '請輸入身分證號或居留證號碼');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerId;
-  } else if (!isValidId(ownerId.value.trim())) {
-    showError(ownerId, '身分證號格式不正確（例：A123456789）');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerId;
-  }
-
-  // 通訊地址：必填
-  const ownerAddress = document.getElementById('owner-address');
-  if (!ownerAddress.value.trim()) {
-    showError(ownerAddress, '請輸入通訊地址');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerAddress;
-  }
-
-  // 聯絡電話：必填，格式驗證
-  const ownerPhone = document.getElementById('owner-phone');
-  if (!ownerPhone.value.trim()) {
-    showError(ownerPhone, '請輸入聯絡電話');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerPhone;
-  } else if (!isValidPhone(ownerPhone.value.trim())) {
-    showError(ownerPhone, '電話格式不正確（例：0912345678 或 04-12345678）');
-    hasError = true;
-    firstErrorEl = firstErrorEl || ownerPhone;
-  }
-
-  // 緊急聯絡人姓名：必填
-  const emergencyName = document.getElementById('emergency-name');
-  if (!emergencyName.value.trim()) {
-    showError(emergencyName, '請輸入緊急聯絡人姓名');
-    hasError = true;
-    firstErrorEl = firstErrorEl || emergencyName;
-  }
-
-  // 緊急聯絡人電話：必填，格式驗證
-  const emergencyPhone = document.getElementById('emergency-phone');
-  if (!emergencyPhone.value.trim()) {
-    showError(emergencyPhone, '請輸入緊急聯絡人電話');
-    hasError = true;
-    firstErrorEl = firstErrorEl || emergencyPhone;
-  } else if (!isValidPhone(emergencyPhone.value.trim())) {
-    showError(emergencyPhone, '電話格式不正確（例：0987654321）');
-    hasError = true;
-    firstErrorEl = firstErrorEl || emergencyPhone;
-  }
-
-  // 寵物晶片號碼：必填
-  const petChip = document.getElementById('pet-chip');
-  if (!petChip.value.trim()) {
-    showError(petChip, '請輸入寵物晶片號碼或辨識資訊');
-    hasError = true;
-    firstErrorEl = firstErrorEl || petChip;
-  }
-
-  // 同意勾選：必勾
+  // ── 1. 同意勾選：永遠必勾（法律必要，不開放店家設定）──
   const agreement = document.getElementById('agreement-checkbox');
-  if (!agreement.checked) {
-    // 同意勾選的錯誤顯示在 #agreement-section 下方
+  if (agreement && !agreement.checked) {
     const section = document.getElementById('agreement-section');
     showErrorAfter(section, '請勾選同意契約條款後再繼續');
-    hasError = true;
     firstErrorEl = firstErrorEl || section;
   }
 
-  // 如果有錯誤，捲動到第一個錯誤欄位
-  if (hasError && firstErrorEl) {
-    firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+  // ── 2. 依店家設定檢查必填 ──
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;  // 設定裡有但頁面沒有的欄位（版本差異）直接略過
 
-  // 回傳驗證結果
-  return !hasError;
+    if (!el.value.trim()) {
+      const field = CONTRACT_FIELDS.find(f => f.id === id);
+      const label = field ? field.label : '此欄位';
+      showFieldError(el, `請填寫${label}`);
+      firstErrorEl = firstErrorEl || el;
+    }
+  });
+
+  // ── 3. 格式驗證：有填才檢查（與必填脫鉤）──
+  Object.entries(FORMAT_RULES).forEach(([id, rule]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const value = el.value.trim();
+    // 已被必填擋下的欄位不重複標錯
+    if (!value || el.classList.contains('error')) return;
+
+    if (!rule.check(value)) {
+      showFieldError(el, rule.message);
+      firstErrorEl = firstErrorEl || el;
+    }
+  });
+
+  // 捲動到第一個錯誤欄位
+  if (firstErrorEl) {
+    firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  }
+  return true;
 }
 
 /**
  * 在欄位下方顯示錯誤提示
+ * （原名 showError，2026/07/08 更名避免與 submit-flow.js 全域衝突）
  * @param {HTMLElement} inputEl - 有問題的 input 元素
  * @param {string} message - 錯誤訊息
  */
-function showError(inputEl, message) {
-  // 在 input 加上紅框 class
+function showFieldError(inputEl, message) {
   inputEl.classList.add('error');
 
-  // 建立錯誤提示文字元素
   const errorSpan = document.createElement('span');
   errorSpan.className = 'field-error';
   errorSpan.textContent = message;
 
-  // 插入到 input 元素後方
+  // 插入到 input 元素後方（同一個 .form-group 內，顯示在欄位正下方）
   inputEl.parentNode.insertBefore(errorSpan, inputEl.nextSibling);
 }
 
 /**
- * 在某個元素後方顯示錯誤提示（用於非 input 元素）
+ * 在某個元素後方顯示錯誤提示（用於非 input 元素，如同意勾選區塊）
  * @param {HTMLElement} el - 目標元素
  * @param {string} message - 錯誤訊息
  */
@@ -176,11 +123,9 @@ function showErrorAfter(el, message) {
  * 每次重新驗證前呼叫，避免重複顯示
  */
 function clearAllErrors() {
-  // 移除所有欄位的紅框
   document.querySelectorAll('.error').forEach(el => {
     el.classList.remove('error');
   });
-  // 移除所有錯誤提示文字
   document.querySelectorAll('.field-error').forEach(el => {
     el.remove();
   });
@@ -188,15 +133,12 @@ function clearAllErrors() {
 
 /**
  * 驗證身分證號格式
- * 規則：第一碼英文字母 + 9 碼數字（共 10 碼）
- * 涵蓋：中華民國身分證、居留證
- * @param {string} id - 身分證號字串
+ * 規則：身分證＝英文字母 + 9 碼數字；居留證＝兩碼英文 + 8 碼數字
+ * @param {string} id
  * @returns {boolean}
  */
 function isValidId(id) {
-  // 身分證：英文字母開頭 + 9 碼數字
   const twId = /^[A-Z][0-9]{9}$/i;
-  // 居留證：兩碼英文 + 8 碼數字
   const residenceId = /^[A-Z]{2}[0-9]{8}$/i;
   return twId.test(id) || residenceId.test(id);
 }
@@ -204,15 +146,12 @@ function isValidId(id) {
 /**
  * 驗證電話格式
  * 涵蓋：手機（09 開頭 10 碼）、市話（含區碼）
- * @param {string} phone - 電話號碼字串
+ * @param {string} phone
  * @returns {boolean}
  */
 function isValidPhone(phone) {
-  // 移除所有空白、連字號、括號後再驗證
   const cleaned = phone.replace(/[\s\-\(\)]/g, '');
-  // 手機：09 開頭 10 碼
   const mobile = /^09\d{8}$/;
-  // 市話：區碼 2-4 碼 + 號碼 6-8 碼，共 8-12 碼
   const landline = /^0\d{8,11}$/;
   return mobile.test(cleaned) || landline.test(cleaned);
 }

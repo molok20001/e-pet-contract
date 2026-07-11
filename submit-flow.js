@@ -50,7 +50,9 @@ function handleSubmitStepA() {
   errorMessage.hidden = true;
 
   // 表單驗證（form-validator.js）
-  const isValid = validateForm();
+  // 必填欄位依店家設定（shopConfig.required_fields）動態決定，
+  // 未設定＝全部選填；同意勾選則永遠必勾
+  const isValid = validateForm(shopData && shopData.required_fields);
   if (!isValid) return;
 
   // 確認甲方簽名不為空（signature.js）

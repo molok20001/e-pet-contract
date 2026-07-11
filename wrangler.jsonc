@@ -1,0 +1,19 @@
+// ══════════════════════════════════════════
+// wrangler.jsonc — 前端 Worker（e-pet-contract）設定檔
+// 這是「純靜態資產 Worker」：沒有後端程式，只託管前端檔案
+// 內容取自 Cloudflare 機器人自動產生的 cloudflare/workers-autoconfig 分支
+// （後端 pet-contract-worker 有自己的 wrangler.toml，兩者互不相干）
+// ══════════════════════════════════════════
+{
+  "name": "e-pet-contract",
+  "compatibility_date": "2026-07-04",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "."
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}

@@ -55,7 +55,11 @@
 
 /* ── 輸入框：驗證失敗狀態 ── */
 /* form-validator.js 會在驗證失敗時加上 .error class */
-.form-group input.error {
+/* 2026/07/08 補 select、textarea：必填欄位可設定後，
+   寵物性別（select）與其他事項（textarea）也可能被標錯 */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
   border-color: var(--color-error);
   box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
 }
