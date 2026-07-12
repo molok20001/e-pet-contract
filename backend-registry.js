@@ -26,6 +26,7 @@
 const BACKEND_REGISTRY = {
   // 店號: 後端 Worker 網址（⚠️ 結尾不可加斜線，比照 ALLOWED_ORIGIN 規則）
   'default': 'https://pet-contract.pet-cont-mor.workers.dev',
+  'shark-bedi-pet-salon': 'https://pet-contract.pet-cont-mor.workers.dev',
 };
 
 /**
