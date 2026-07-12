@@ -12,11 +12,11 @@
    4. 建立甲乙雙方簽名板、綁定兩階段送出按鈕（submit-flow.js）
 ══════════════════════════════════════════ */
 
-// Worker API 網址（統一在這裡修改）
-const WORKER_URL = 'https://pet-contract.pet-cont-mor.workers.dev';
-
 // 目前店家 ID（從網址參數 ?shop_id= 取得，見 shop-id.js）
 const SHOP_ID = getShopId();
+
+// Worker API 網址（依店號查對照表，見 backend-registry.js）
+const WORKER_URL = getWorkerUrl(SHOP_ID);
 
 // 儲存從 Worker 取得的資料（給 PDF 生成用，submit-flow.js 會讀取）
 let shopData = null;
@@ -68,10 +68,20 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadConfig() {
   try {
-    const response = await fetch(`${WORKER_URL}/config?shop_id=${SHOP_ID}`);
+    // 帶上網址中的一次性票券（若有），由後端一併查驗
+    const signToken = getSignToken();
+    const response = await fetch(
+      `${WORKER_URL}/config?shop_id=${SHOP_ID}&token=${encodeURIComponent(signToken)}`
+    );
     const data = await response.json();
 
     if (data.success) {
+      // 一次性票券檢查（店家 require_token 開啟時）：
+      // 無票/過期票 → 完全擋頁（2026/07/08 使用者拍板），不載入任何內容
+      if (data.shopConfig.require_token === true && data.token_valid !== true) {
+        blockPage('此簽約連結無效或已過期，請向店家索取新的簽約連結。');
+        return;
+      }
       // 儲存資料供後續使用
       shopData = data.shopConfig;
       clausesData = data.clauses;
@@ -89,6 +99,9 @@ async function loadConfig() {
 
       // 渲染條文（clause-renderer.js）
       renderClauses(clausesData);
+
+      // 依店家設定標示必填星號（form-validator.js）
+      markRequiredFields(shopData.required_fields);
 
       // 設定載入成功，允許送出
       configLoaded = true;
@@ -108,6 +121,30 @@ async function loadConfig() {
     if (shopNameEl) shopNameEl.textContent = '（載入失敗，請重新整理）';
     disableSubmit('資料載入失敗，請重新整理頁面後再試。');
   }
+}
+
+/**
+ * 完全擋頁：隱藏所有內容區塊，只顯示原因
+ * 用於一次性票券無效/過期（require_token 開啟時）
+ * @param {string} reason - 顯示給使用者的原因
+ */
+function blockPage(reason) {
+  // 隱藏簽約頁所有區塊（與 showSuccessScreen 相同的清單）
+  ['review-notice', 'clause-section', 'agreement-section', 'form-section',
+   'pet-section', 'signature-section', 'submit-section', 'signature-section-b']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = true;
+    });
+
+  const shopNameEl = document.getElementById('shop-name');
+  if (shopNameEl) shopNameEl.textContent = '（無法開啟簽約頁）';
+
+  // 在 main 開頭插入原因說明
+  const hint = document.createElement('p');
+  hint.className = 'submit-disabled-hint';
+  hint.textContent = reason;
+  document.querySelector('main').prepend(hint);
 }
 
 /**

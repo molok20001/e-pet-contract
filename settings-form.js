@@ -11,8 +11,8 @@
    - saveClauseSelections(shopId, clauses) 儲存條文到 Worker
 ══════════════════════════════════════════ */
 
-// Worker API 網址（全域設定，統一在這裡修改）
-const WORKER_URL = 'https://pet-contract.pet-cont-mor.workers.dev';
+// Worker API 網址（依店號查對照表，見 backend-registry.js）
+const WORKER_URL = getWorkerUrl(getShopId());
 
 /**
  * 把店家設定資料填入表單欄位

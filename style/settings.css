@@ -296,3 +296,31 @@
   background-color: var(--color-surface);
   border: 1.5px solid var(--color-border);
 }
+
+/* ══════════════════════════════════════════
+   產生簽約網址卡片（token-url-result）
+══════════════════════════════════════════ */
+.token-url-input {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  padding: 12px var(--spacing-md);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+}
+
+.token-open-link {
+  display: block;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+  padding: 12px;
+  font-weight: 700;
+  color: white;
+  background-color: var(--color-accent, #6b5744);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}

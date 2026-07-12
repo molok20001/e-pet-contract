@@ -9,11 +9,11 @@
    4. 綁定儲存按鈕
 ══════════════════════════════════════════ */
 
-// Worker API 網址（與 settings-form.js 一致）
-const SETTINGS_WORKER_URL = 'https://pet-contract.pet-cont-mor.workers.dev';
-
 // 目前操作的店家 ID（從網址參數 ?shop_id= 取得，見 shop-id.js）
 const SHOP_ID = getShopId();
+
+// Worker API 網址（依店號查對照表，見 backend-registry.js；與 settings-form.js 一致）
+const SETTINGS_WORKER_URL = getWorkerUrl(SHOP_ID);
 
 // 儲存目前的條文資料（collectClauseSelections 需要用到）
 let currentClauses = [];
