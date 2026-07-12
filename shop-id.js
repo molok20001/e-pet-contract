@@ -29,3 +29,14 @@ function getShopId() {
 
   return shopId.trim();
 }
+
+/**
+ * 從網址參數取得一次性簽約票券（?token=）
+ * 店家 require_token 開啟時，簽約頁必須帶有效票券
+ * 沒帶時回空字串（由 app.js 依開關決定是否擋頁）
+ * @returns {string} token 字串或 ''
+ */
+function getSignToken() {
+  const params = new URLSearchParams(window.location.search);
+  return (params.get('token') || '').trim();
+}

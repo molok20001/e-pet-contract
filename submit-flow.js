@@ -109,7 +109,8 @@ async function handleSubmitStepB() {
     const signatureDataUrl = signaturePadA.getDataUrl();   // 甲方
     const signatureDataUrlB = signaturePadB.getDataUrl();  // 乙方
 
-    const pdfBytes = await generatePDF(
+    // 版面二版（pdf-layout-v2.js）；回退舊版改呼叫 generatePDF（pdf-client.js）
+    const pdfBytes = await generatePDFv2(
       formData,
       signatureDataUrl,
       signatureDataUrlB,
@@ -131,6 +132,7 @@ async function handleSubmitStepB() {
           signatureDataUrl,
           signatureDataUrlB,
           clauses: clausesData,
+          token: getSignToken(),  // 一次性票券（shop-id.js；後端驗票銷票）
         }),
       });
       const result = await response.json();
@@ -166,7 +168,11 @@ function collectFormData() {
     ownerEmail:     document.getElementById('owner-email').value.trim(), // 目前僅記錄（版本5寄信預留）
     emergencyName:  document.getElementById('emergency-name').value.trim(),
     emergencyPhone: document.getElementById('emergency-phone').value.trim(),
-    vetName:        document.getElementById('vet-name').value.trim() || window.defaultVet || '',
+    // 2026/07/11 拿掉 || window.defaultVet fallback：PDF 版面二版把「甲方指定」與
+    // 「乙方預設（如無指定）」分成兩列印出，甲方欄必須保留客戶原始輸入（空白就是沒指定）。
+    // KV 紀錄同樣受惠：不再把店家預設值誤存成甲方指定。
+    // ⚠️ 若回退舊版面（pdf-client.js），需評估是否恢復 fallback（舊版只印甲方一欄）
+    vetName:        document.getElementById('vet-name').value.trim(),
     petName:        document.getElementById('pet-name').value.trim(),
     petBreed:       document.getElementById('pet-breed').value.trim(),
     petSex:         document.getElementById('pet-sex').value,
